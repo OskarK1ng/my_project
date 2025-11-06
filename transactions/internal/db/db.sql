@@ -2,13 +2,13 @@
 docker run --name myapp-postgres \
   -e POSTGRES_USER=admin \
   -e POSTGRES_PASSWORD=admin \
-  -e POSTGRES_DB=bank_account_api_db \
+  -e POSTGRES_DB=my_app_db \
   -p 5432:5432 \
   -d postgres:16
 */
 
 /*
-psql -U admin -d bank_account_api_db
+psql -U postgres -d mydb --pset pager=off
 */
 
 CREATE TABLE IF NOT EXISTS transactions (

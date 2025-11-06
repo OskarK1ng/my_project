@@ -10,33 +10,30 @@ import (
 	"time"
 )
 
-type RegisterRequest struct {
-	FirstName string    `json:"name"`
-	LastName  string    `json:"lastname"`
-	Email     string    `json:"email"`
-	Phone     string    `json:"phone"`
-	CreatedAt time.Time `json:"created_at"`
-}
-
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		json.NewEncoder(w).Encode(map[string]string{
-			"error": "method not allowed",
-		})
-
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	var user models.User
-	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+	var req models.RegisterRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	log.Printf("[RegisterHandler] Registering new user: %s %s", user.FirstName, user.LastName)
+	log.Printf("[RegisterHandler] Registering new user: %s %s", req.FirstName, req.LastName)
+
+	user := models.User{
+		UserName:      req.FirstName,
+		UserLastName:  req.LastName,
+		UserEmail:     req.Email,
+		UserPhone:     req.Phone,
+		UserPassword:  req.Password,
+		UserCreatedAt: time.Now(),
+	}
 
 	if err := services.RegisterUser(context.Background(), &user); err != nil {
 		log.Printf("registration failed: %v", err)

@@ -8,20 +8,34 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
+// RegisterUser создает нового клиента в БД с хешированным паролем
 func RegisterUser(ctx context.Context, user *models.User) error {
 	user.UserID = uuid.New().String()
-	user.CreatedAt = time.Now()
+	user.UserCreatedAt = time.Now()
+
+	// проверяем, что пароль не пуст
+	if user.UserPassword == "" {
+		return fmt.Errorf("password is required")
+	}
+
+	// хэшируем пароль
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.UserPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return fmt.Errorf("failed to hash password: %w", err)
+	}
 
 	query := `
 	INSERT INTO users (
 		user_id,
-		first_name,
-		last_name,
-		email,
-		phone,
-		created_at
+		user_name,
+		user_last_name,
+		user_email,
+		user_phone,
+		user_password_hash,
+		user_created_at
 		)
 	VALUES (
 		$1,
@@ -29,12 +43,13 @@ func RegisterUser(ctx context.Context, user *models.User) error {
 		$3,
 		$4,
 		$5,
-		$6
+		$6,
+		$7
 	)
 	`
 
-	_, err := db.DB.Exec(ctx, query,
-		user.UserID, user.FirstName, user.LastName, user.Email, user.Phone, user.CreatedAt)
+	_, err = db.DB.Exec(ctx, query,
+		user.UserID, user.UserName, user.UserLastName, user.UserEmail, user.UserPhone, string(hashedPassword), user.UserCreatedAt)
 	if err != nil {
 		return fmt.Errorf("failed to insert user: %w", err)
 	}
