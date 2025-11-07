@@ -20,6 +20,7 @@ func getEnv(envVar, def string) string {
 	if value == "" {
 		value = def
 	}
+
 	return value
 }
 

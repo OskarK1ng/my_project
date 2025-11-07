@@ -12,13 +12,13 @@ import (
 var DB *pgxpool.Pool
 
 func ConnectDB(c *config.Config) error {
-	dsn := fmt.Sprintf(
+	dns := fmt.Sprintf(
 		"postgresql://%v:%v@%v:%v/%v?sslmode=disable",
 		c.DBUser, c.DBPassword, c.DBHost, c.DBPort, c.DBName,
 	)
 
 	var err error
-	DB, err = pgxpool.New(context.Background(), dsn)
+	DB, err = pgxpool.New(context.Background(), dns)
 	if err != nil {
 		return fmt.Errorf("error creating connection pool: %w", err)
 	}
@@ -28,5 +28,6 @@ func ConnectDB(c *config.Config) error {
 	}
 
 	log.Println("Connected to PostgreSQL")
+
 	return nil
 }
