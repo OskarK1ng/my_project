@@ -8,7 +8,7 @@ docker run --name myapp-postgres \
 */
 
 /*
-psql -U postgres -d mydb --pset pager=off
+psql -U admin -d my_app_db --pset pager=off 
 */
 
 CREATE TABLE users (
