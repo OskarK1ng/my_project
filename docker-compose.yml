@@ -3,32 +3,58 @@ services:
   # контейнер с БД
   db:
     image: postgres:17 # какой образ использовать
+    container_name: postgres_db
     restart: always # что делать если контейнер упадет
     environment:
-      # это переменные окружения
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=appdb
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=my_app_db
     ports:
-      # внешний / внутренний порты
       - "5435:5432"
     volumes:
-      # где хранить данные с БД, если контейнер вырубится
       - pgdata:/var/lib/postgresql/data
 
-  app:
-    build: .
-    env_file:
-      - .env
+  auth:
+    build: ./auth
+    container_name: auth_service
+    env_file: ./auth/.env
+    ports:
+      - "8082:8082"
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_HOST=localhost
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=my_app_db
+
+  registration:
+    build: ./registration
+    container_name: registration_service
+    env_file: ./registration/.env
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_HOST=localhost
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=my_app_db
+
+  transactions:
+    build: ./transactions
+    container_name: transactions_service
+    env_file: ./transactions/.env
     ports:
       - "8080:8080"
     depends_on:
       - db
     environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=appdb
+      - POSTGRES_HOST=localhost
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=my_app_db
 
 volumes:
   pgdata:
