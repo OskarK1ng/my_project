@@ -6,18 +6,15 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-// Должно быть в env
-const SecretJWT = "secret_key" // in real life, example: b2dg8w88)*(^&^TV)
-
 type Claims struct {
 	Email                string `json:"email"`
 	jwt.RegisteredClaims        // встраивание структур
 }
 
 // ttl - time to life
-func GenerateJWT(email string) (string, error) {
+func GenerateJWT(email string, secret string, ttlMinutes int) (string, error) {
 	// Установим TTL (5 min standart)
-	expTime := time.Now().Add(5 * time.Minute)
+	expTime := time.Now().Add(time.Duration(ttlMinutes) * time.Minute)
 
 	// Создадим claims
 	claims := Claims{
@@ -31,7 +28,7 @@ func GenerateJWT(email string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &claims)
 
 	// Подписываем token (генерируем полноценный token с checksum)
-	tokenString, err := token.SignedString([]byte(SecretJWT))
+	tokenString, err := token.SignedString([]byte(secret))
 	if err != nil {
 		return "", err
 	}

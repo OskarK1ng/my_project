@@ -29,7 +29,7 @@ COPY --from=builder /app/main .
 COPY .env .env
 
 # Открываем порт (опционально)
-EXPOSE 8080
+EXPOSE 8082
 
 # Указываем команду запуска
 CMD ["./main"]

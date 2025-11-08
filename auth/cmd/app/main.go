@@ -22,7 +22,7 @@ func main() {
 
 	defer db.DB.Close()
 
-	http.HandleFunc("/login", handlers.Login)
+	http.HandleFunc("/login", handlers.LoginHandler(cfg))
 
 	port := cfg.ServerPort
 	log.Printf("Starting server on localhost%s", port)
