@@ -1,10 +1,10 @@
 package repository
 
 import (
-	"bank_account_api/internal/db"
-	"bank_account_api/internal/models"
 	"context"
 	"fmt"
+	"transactions/internal/db"
+	"transactions/internal/models"
 )
 
 func CreateAccount(ctx context.Context, userID int64) (models.Account, error) {

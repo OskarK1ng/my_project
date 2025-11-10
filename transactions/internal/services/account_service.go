@@ -1,9 +1,9 @@
 package services
 
 import (
-	"bank_account_api/internal/repository"
 	"context"
 	"errors"
+	"transactions/internal/repository"
 )
 
 func Deposit(ctx context.Context, accountID int64, amount float64) error {

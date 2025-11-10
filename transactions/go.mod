@@ -1,4 +1,4 @@
-module bank_account_api
+module transactions
 
 go 1.24.5
 

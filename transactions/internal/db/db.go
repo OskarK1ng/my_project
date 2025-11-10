@@ -1,10 +1,10 @@
 package db
 
 import (
-	"bank_account_api/internal/config"
 	"context"
 	"fmt"
 	"log"
+	"transactions/internal/config"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )

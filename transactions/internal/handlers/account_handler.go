@@ -1,13 +1,13 @@
 package handlers
 
 import (
-	"bank_account_api/internal/services"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"transactions/internal/services"
 )
 
 type TransactionRequest struct {
