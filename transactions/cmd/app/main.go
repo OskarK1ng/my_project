@@ -1,11 +1,11 @@
 package main
 
 import (
-	"bank_account_api/internal/config"
-	"bank_account_api/internal/db"
-	"bank_account_api/internal/handlers"
 	"log"
 	"net/http"
+	"transactions/internal/config"
+	"transactions/internal/db"
+	"transactions/internal/handlers"
 )
 
 func main() {
