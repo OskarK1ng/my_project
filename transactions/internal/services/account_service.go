@@ -6,19 +6,18 @@ import (
 	"transactions/internal/repository"
 )
 
-func Deposit(ctx context.Context, accountID int64, amount float64) error {
-	acc, err := repository.GetAccountByID(ctx, accountID)
+func Deposit(ctx context.Context, userID string, amount float64) error {
+	acc, err := repository.GetAccountByUserID(ctx, userID)
 	if err != nil {
 		return err
 	}
 
 	acc.Balance += amount
-
-	return repository.UpdateBalance(ctx, acc.ID, acc.Balance)
+	return repository.UpdateBalance(ctx, userID, acc.Balance)
 }
 
-func Withdraw(ctx context.Context, accountID int64, amount float64) error {
-	acc, err := repository.GetAccountByID(ctx, accountID)
+func Withdraw(ctx context.Context, userID string, amount float64) error {
+	acc, err := repository.GetAccountByUserID(ctx, userID)
 	if err != nil {
 		return err
 	}
@@ -28,6 +27,5 @@ func Withdraw(ctx context.Context, accountID int64, amount float64) error {
 	}
 
 	acc.Balance -= amount
-
-	return repository.UpdateBalance(ctx, acc.ID, acc.Balance)
+	return repository.UpdateBalance(ctx, userID, acc.Balance)
 }

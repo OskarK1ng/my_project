@@ -13,7 +13,8 @@ psql -U admin -d my_app_db --pset pager=off
 
 CREATE TABLE IF NOT EXISTS transactions (
     id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL UNIQUE,
+    user_id UUID NOT NULL UNIQUE REFERENCES users(user_id),
     balance NUMERIC(15,2) NOT NULL DEFAULT 0,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+

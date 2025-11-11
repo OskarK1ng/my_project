@@ -7,7 +7,7 @@ import (
 	"transactions/internal/models"
 )
 
-func CreateAccount(ctx context.Context, userID int64) (models.Account, error) {
+func CreateAccount(ctx context.Context, userID string) (models.Account, error) {
 	query := `
 		INSERT INTO transactions (user_id, balance, created_at)
 		VALUES ($1, 0, NOW())
@@ -21,46 +21,37 @@ func CreateAccount(ctx context.Context, userID int64) (models.Account, error) {
 		&acc.Balance,
 		&acc.CreatedAt,
 	)
-
 	return acc, err
 }
 
-func GetAccountByID(ctx context.Context, id int64) (models.Account, error) {
+func GetAccountByUserID(ctx context.Context, userID string) (models.Account, error) {
 	var acc models.Account
 	query := `
-		SELECT
-			id,
-			user_id,
-			balance,
-			created_at
-		FROM transactions
-		WHERE user_id=$1
-	`
-
-	err := db.DB.QueryRow(ctx, query, id).Scan(
+        SELECT id, user_id, balance, created_at
+        FROM transactions
+        WHERE user_id=$1
+    `
+	err := db.DB.QueryRow(ctx, query, userID).Scan(
 		&acc.ID,
 		&acc.UserID,
 		&acc.Balance,
 		&acc.CreatedAt,
 	)
-
 	return acc, err
 }
 
-func UpdateBalance(ctx context.Context, id int64, newBalance float64) error {
+func UpdateBalance(ctx context.Context, userID string, newBalance float64) error {
 	query := `
-		UPDATE transactions
-		SET balance=$1
-		WHERE user_id=$2
-	`
-
-	cmd, err := db.DB.Exec(ctx, query, newBalance, id)
+        UPDATE transactions
+        SET balance=$1
+        WHERE user_id=$2
+    `
+	cmd, err := db.DB.Exec(ctx, query, newBalance, userID)
 	if err != nil {
 		return err
 	}
 	if cmd.RowsAffected() == 0 {
 		return fmt.Errorf("account not found")
 	}
-
 	return nil
 }

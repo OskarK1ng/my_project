@@ -1,10 +1,12 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Account struct {
-	ID        int64     `gorm:"primaryKey" json:"id"`
-	UserID    int64     `json:"user_id"`
+	ID        int64     `json:"id"`
+	UserID    string    `json:"user_id"`
 	Balance   float64   `json:"balance"`
 	CreatedAt time.Time `json:"created_at"`
 }

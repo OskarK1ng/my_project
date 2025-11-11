@@ -8,10 +8,12 @@ import (
 	"log"
 	"net/http"
 	"transactions/internal/services"
+
+	"github.com/google/uuid"
 )
 
 type TransactionRequest struct {
-	ID     int64   `json:"id"`
+	ID     string  `json:"id"`
 	Amount float64 `json:"amount"`
 }
 
@@ -38,6 +40,13 @@ func DepositHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Проверяем, что ID валидный UUID
+	if _, err := uuid.Parse(req.ID); err != nil {
+		http.Error(w, "invalid user_id", http.StatusBadRequest)
+		log.Printf("Invalid UUID: %v", req.ID)
+		return
+	}
+
 	// Проверяем значения
 	if req.Amount <= 0 {
 		http.Error(w, "amount must be greater than 0", http.StatusBadRequest)
@@ -55,12 +64,12 @@ func DepositHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Возвращаем ответ
 	resp := map[string]string{
-		"message": fmt.Sprintf("Deposit %.2f to account %d successful", req.Amount, req.ID),
+		"message": fmt.Sprintf("Deposit %.2f to account %v successful", req.Amount, req.ID),
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
 
-	log.Printf("Deposit success for ID=%d, amount=%.2f", req.ID, req.Amount)
+	log.Printf("Deposit success for ID=%v, amount=%.2f", req.ID, req.Amount)
 }
 
 func WithdrawHandler(w http.ResponseWriter, r *http.Request) {
@@ -97,10 +106,10 @@ func WithdrawHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp := map[string]string{
-		"message": fmt.Sprintf("Withdraw %.2f from account %d successful", req.Amount, req.ID),
+		"message": fmt.Sprintf("Withdraw %.2f from account %v successful", req.Amount, req.ID),
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
 
-	log.Printf("Withdraw success for ID=%d, amount=%.2f", req.ID, req.Amount)
+	log.Printf("Withdraw success for ID=%v, amount=%.2f", req.ID, req.Amount)
 }

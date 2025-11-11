@@ -6,6 +6,7 @@ import (
 	"transactions/internal/config"
 	"transactions/internal/db"
 	"transactions/internal/handlers"
+	"transactions/internal/middleware"
 )
 
 func main() {
@@ -22,8 +23,8 @@ func main() {
 
 	defer db.DB.Close()
 
-	http.HandleFunc("/deposit", handlers.DepositHandler)
-	http.HandleFunc("/withdraw", handlers.WithdrawHandler)
+	http.HandleFunc("/deposit", middleware.AuthMiddleware(cfg, handlers.DepositHandler))
+	http.HandleFunc("/withdraw", middleware.AuthMiddleware(cfg, handlers.WithdrawHandler))
 
 	port := cfg.ServerPort
 	log.Printf("Starting server on localhost%s", port)
