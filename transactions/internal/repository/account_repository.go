@@ -31,6 +31,7 @@ func GetAccountByUserID(ctx context.Context, userID string) (models.Account, err
         FROM transactions
         WHERE user_id=$1
     `
+
 	err := db.DB.QueryRow(ctx, query, userID).Scan(
 		&acc.ID,
 		&acc.UserID,
