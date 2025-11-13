@@ -33,14 +33,15 @@ func LoginHandler(cfg *config.Config) http.HandlerFunc {
 		}
 
 		// Передаём cfg и context
-		token, err := services.Login(context.Background(), credentials.Email, credentials.Password, cfg)
+		token, UserID, err := services.Login(context.Background(), credentials.Email, credentials.Password, cfg)
 		if err != nil {
 			http.Error(w, "invalid credentials", http.StatusUnauthorized)
 			return
 		}
 
 		json.NewEncoder(w).Encode(map[string]string{
-			"token": token,
+			"token":   token,
+			"user_id": UserID,
 		})
 	}
 }
