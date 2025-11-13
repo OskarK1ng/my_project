@@ -8,7 +8,7 @@
 1. **Registration Service** — регистрация пользователей.  
    После создания нового пользователя автоматически создаётся счёт (balance = 0).
 2. **Auth Service** — авторизация и выдача JWT-токенов.
-3. **Transactions / Balance Service** — работа с балансом пользователя (депозит, проверка и т.д.).
+3. **Transactions / Balance Service** — работа с балансом пользователя (пополнение и снятие).
 
 ---
 
@@ -24,20 +24,104 @@
 
 ---
 
-## 🏗️ Архитектура проекта
+## 📂 Архитектура проекта
 
 ```
 my_project/
-├── internal/
-│ ├── config/ # Конфигурация приложения (.env, настройки DB, сервер)
-│ ├── db/ # Подключение к PostgreSQL
-│ ├── handlers/ # HTTP Handlers (API endpoints)
-│ ├── models/ # Модели данных
-│ ├── repository/ # Запросы к БД
-│ └── services/ # Бизнес-логика
+│
+├─ auth/ # Модуль аутентификации
+│ ├─ cmd/
+│ │ └─ app/
+│ │ └─ main.go
+│ │
+│ ├─ internal/
+│ │ ├─ config/
+│ │ │ └─ config.go
+│ │ │
+│ │ ├─ db/
+│ │ │ └─ db.go
+│ │ │
+│ │ ├─ handlers/
+│ │ │ └─ auth.go
+│ │ │
+│ │ ├─ models/
+│ │ │ └─ user.go
+│ │ │
+│ │ ├─ security/
+│ │ │ └─ jwt.go
+│ │ │
+│ │ └─ services/
+│ │ └─ auth.go
+│
+├─ .env
+├─ Dockerfile
+├─ go.mod
+└─ go.sum
+├─ registration/ # Модуль регистрации
+│ ├─ cmd/
+│ │ └─ app/
+│ │ └─ main.go
+│ │
+│ ├─ internal/
+│ │ ├─ config/
+│ │ │ └─ config.go
+│ │ │
+│ │ ├─ db/
+│ │ │ └─ db.go
+│ │ │
+│ │ ├─ handlers/
+│ │ │ └─ register.go
+│ │ │
+│ │ ├─ models/
+│ │ │ └─ user.go
+│ │ │
+│ │ ├─ repository/
+│ │ │ └─ balance.go
+│ │ │
+│ │ └─ services/
+│ │ └─ register.go
+│
+├─ .env
+├─ Dockerfile
+├─ go.mod
+└─ go.sum
+├─ transactions/ # Модуль пополнения и снятия
+│ ├─ cmd/
+│ │ └─ app/
+│ │ └─ main.go
+│ │
+│ ├─ internal/
+│ │ ├─ config/
+│ │ │ └─ config.go
+│ │ │
+│ │ ├─ db/
+│ │ │ └─ db.go
+│ │ │
+│ │ ├─ handlers/
+│ │ │ └─ handler.go
+│ │ │
+│ │ ├─ middleware/
+│ │ │ └─ auth.go
+│ │ │
+│ │ ├─ models/
+│ │ │ └─ account.go
+│ │ │
+│ │ ├─ repository/
+│ │ │ └─ balance.go
+│ │ │
+│ │ ├─ security/
+│ │ │ └─ jwt.go
+│ │ │
+│ │ └─ services/
+│ │ │ └─ balance.go
+│
+├─ .env
+├─ Dockerfile
+├─ go.mod
+└─ go.sum
+├── .gitignore
+├── db.sql
 ├── docker-compose.yml
-├── go.mod
-├── go.sum
 └── README.md
 ```
 
@@ -54,6 +138,19 @@ cd my_project
 
 ### Настройте .env
 
+#### /auth
+```sh
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=admin
+POSTGRES_DB=my_app_db
+POSTGRES_HOST=db
+POSTGRES_PORT=5432
+SERVER_PORT=:8082
+
+JWT_SECRET=super_secret_key_123
+JWT_TTL_MINUTES=15
+```
+#### /registration
 ```sh
 POSTGRES_USER=admin
 POSTGRES_PASSWORD=admin
@@ -62,8 +159,20 @@ POSTGRES_HOST=db
 POSTGRES_PORT=5432
 SERVER_PORT=:8081
 
-JWT_SECRET=supersecretkey
-JWT_TTL_MINUTES=60
+JWT_SECRET=super_secret_key_123
+JWT_TTL_MINUTES=15
+```
+#### /transactions
+```sh
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=admin
+POSTGRES_DB=my_app_db
+POSTGRES_HOST=db
+POSTGRES_PORT=5432
+SERVER_PORT=:8080
+
+JWT_SECRET=super_secret_key_123
+JWT_TTL_MINUTES=15
 ```
 
 ### Запустите Docker Compose
