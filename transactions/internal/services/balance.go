@@ -12,12 +12,9 @@ func Deposit(ctx context.Context, userID string, amount float64) error {
 		return fmt.Errorf("user id is required")
 	}
 
-	acc, err := repository.GetAccountByUserID(ctx, userID)
+	acc, err := repository.GetBalance(ctx, userID)
 	if err != nil {
-		acc, err = repository.CreateAccount(ctx, userID)
-		if err != nil {
-			return fmt.Errorf("failed to create account: %v", err)
-		}
+		return err
 	}
 
 	acc.Balance += amount
@@ -30,7 +27,7 @@ func Withdraw(ctx context.Context, userID string, amount float64) error {
 		return fmt.Errorf("user id is required")
 	}
 
-	acc, err := repository.GetAccountByUserID(ctx, userID)
+	acc, err := repository.GetBalance(ctx, userID)
 	if err != nil {
 		return err
 	}

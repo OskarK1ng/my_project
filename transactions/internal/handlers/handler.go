@@ -35,14 +35,14 @@ func DepositHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Проверяем значения
-	if req.Amount <= 0 {
+	if req.Balance <= 0 {
 		http.Error(w, "amount must be greater than 0", http.StatusBadRequest)
-		log.Printf("Invalid amount: %v", req.Amount)
+		log.Printf("Invalid amount: %v", req.Balance)
 		return
 	}
 
 	// Вызываем бизнес-логику
-	err := services.Deposit(context.Background(), req.UserID, req.Amount)
+	err := services.Deposit(context.Background(), req.UserID, req.Balance)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		log.Printf("Service error: %v", err)
@@ -51,12 +51,12 @@ func DepositHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Возвращаем ответ
 	resp := map[string]string{
-		"message": fmt.Sprintf("Deposit %.2f to account %v successful", req.Amount, req.UserID),
+		"message": fmt.Sprintf("Deposit %.2f to account %v successful", req.Balance, req.UserID),
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
 
-	log.Printf("Deposit success for ID=%v, amount=%.2f", req.UserID, req.Amount)
+	log.Printf("Deposit success for ID=%v, amount=%.2f", req.UserID, req.Balance)
 }
 
 func WithdrawHandler(w http.ResponseWriter, r *http.Request) {
@@ -79,13 +79,13 @@ func WithdrawHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if req.Amount <= 0 {
+	if req.Balance <= 0 {
 		http.Error(w, "amount must be greater than 0", http.StatusBadRequest)
-		log.Printf("Invalid amount: %v", req.Amount)
+		log.Printf("Invalid amount: %v", req.Balance)
 		return
 	}
 
-	err := services.Withdraw(context.Background(), req.UserID, req.Amount)
+	err := services.Withdraw(context.Background(), req.UserID, req.Balance)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		log.Printf("Service error: %v", err)
@@ -93,10 +93,10 @@ func WithdrawHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp := map[string]string{
-		"message": fmt.Sprintf("Withdraw %.2f from account %v successful", req.Amount, req.UserID),
+		"message": fmt.Sprintf("Withdraw %.2f from account %v successful", req.Balance, req.UserID),
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
 
-	log.Printf("Withdraw success for ID=%v, amount=%.2f", req.UserID, req.Amount)
+	log.Printf("Withdraw success for ID=%v, amount=%.2f", req.UserID, req.Balance)
 }

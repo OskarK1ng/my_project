@@ -13,6 +13,6 @@ type Account struct {
 
 // TransactionRequest используется для запросов депозита/снятия средств
 type TransactionRequest struct {
-	UserID string  `json:"user_id"`
-	Amount float64 `json:"amount"`
+	UserID  string  `json:"user_id"`
+	Balance float64 `json:"amount"`
 }

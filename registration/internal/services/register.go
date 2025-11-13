@@ -3,8 +3,10 @@ package services
 import (
 	"context"
 	"fmt"
+	"log"
 	"registration/internal/db"
 	"registration/internal/models"
+	"registration/internal/repository"
 	"time"
 
 	"github.com/google/uuid"
@@ -33,7 +35,6 @@ func RegisterUser(ctx context.Context, user *models.User) error {
 	if err != nil {
 		return fmt.Errorf("failed to check existing user: %w", err)
 	}
-
 	if count > 0 {
 		return fmt.Errorf("user with this email or phone already exists")
 	}
@@ -44,7 +45,20 @@ func RegisterUser(ctx context.Context, user *models.User) error {
 		return fmt.Errorf("failed to hash password: %w", err)
 	}
 
-	query := `
+	// Начинаем транзакцию
+	tx, err := db.DB.Begin(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to start transaction: %w", err)
+	}
+
+	rollback := func() {
+		if rbErr := tx.Rollback(ctx); rbErr != nil {
+			log.Printf("[RegisterUser] rollback error: %v", rbErr)
+		}
+	}
+
+	// Вставляем пользователя
+	userQuery := `
 	INSERT INTO users (
 		user_id,
 		user_name,
@@ -65,7 +79,7 @@ func RegisterUser(ctx context.Context, user *models.User) error {
 	)
 	`
 
-	_, err = db.DB.Exec(ctx, query,
+	_, err = db.DB.Exec(ctx, userQuery,
 		user.UserID,
 		user.UserName,
 		user.UserLastName,
@@ -74,8 +88,22 @@ func RegisterUser(ctx context.Context, user *models.User) error {
 		string(hashedPassword),
 		user.UserCreatedAt)
 	if err != nil {
+		rollback()
 		return fmt.Errorf("failed to insert user: %w", err)
 	}
 
+	// Создаём баланс
+	if err := repository.CreateBalance(ctx, tx, user.UserID); err != nil {
+		rollback()
+		return fmt.Errorf("failed to create balance: %w", err)
+	}
+
+	// Коммитим транзакцию
+	if err := tx.Commit(ctx); err != nil {
+		rollback()
+		return fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	log.Printf("[RegisterUser] User %s successfully registered with balance 0", user.UserID)
 	return nil
 }

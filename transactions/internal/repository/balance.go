@@ -7,43 +7,24 @@ import (
 	"transactions/internal/models"
 )
 
-func CreateAccount(ctx context.Context, userID string) (models.Account, error) {
-	query := `
-		INSERT INTO transactions (user_id, balance, created_at)
-		VALUES ($1, 0, NOW())
-		RETURNING id, user_id, balance, created_at
-	`
-
-	var acc models.Account
-	err := db.DB.QueryRow(ctx, query, userID).Scan(
-		&acc.ID,
-		&acc.UserID,
-		&acc.Balance,
-		&acc.CreatedAt,
-	)
-	return acc, err
-}
-
-func GetAccountByUserID(ctx context.Context, userID string) (models.Account, error) {
+func GetBalance(ctx context.Context, userID string) (models.Account, error) {
 	var acc models.Account
 	query := `
-        SELECT id, user_id, balance, created_at
-        FROM transactions
+        SELECT user_id, balance
+        FROM balance
         WHERE user_id=$1
     `
 
 	err := db.DB.QueryRow(ctx, query, userID).Scan(
-		&acc.ID,
 		&acc.UserID,
 		&acc.Balance,
-		&acc.CreatedAt,
 	)
 	return acc, err
 }
 
 func UpdateBalance(ctx context.Context, userID string, newBalance float64) error {
 	query := `
-        UPDATE transactions
+        UPDATE balance
         SET balance=$1
         WHERE user_id=$2
     `

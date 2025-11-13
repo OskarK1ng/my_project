@@ -34,8 +34,8 @@ func InitConfig() (*Config, error) {
 		DBUser:     getEnv("POSTGRES_USER", "admin"),
 		DBPassword: getEnv("POSTGRES_PASSWORD", "admin"),
 		DBName:     getEnv("POSTGRES_DB", "my_app_db"),
-		DBHost:     getEnv("POSTGRES_HOST", "localhost"),
-		DBPort:     getEnv("POSTGRES_PORT", "5435"),
+		DBHost:     getEnv("POSTGRES_HOST", "db"),
+		DBPort:     getEnv("POSTGRES_PORT", "5432"),
 		ServerPort: getEnv("SERVER_PORT", ":8081"),
 	}, nil
 }
