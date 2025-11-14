@@ -32,7 +32,7 @@ my_project/
 ├─ auth/ # Модуль аутентификации
 │ ├─ cmd/
 │ │ └─ app/
-│ │ └─ main.go
+│ │   └─ main.go
 │ │
 │ └─ internal/
 │   ├─ config/
@@ -60,7 +60,7 @@ my_project/
 ├─ registration/ # Модуль регистрации
 │ ├─ cmd/
 │ │ └─ app/
-│ │ └─ main.go
+│ │   └─ main.go
 │ │
 │ └─ internal/
 │   ├─ config/
@@ -88,7 +88,7 @@ my_project/
 ├─ transactions/ # Модуль пополнения и снятия
 │ ├─ cmd/
 │ │ └─ app/
-│ │ └─ main.go
+│ │   └─ main.go
 │ │
 │ └─ internal/
 │   ├─ config/
