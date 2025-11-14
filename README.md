@@ -34,91 +34,91 @@ my_project/
 │ │ └─ app/
 │ │ └─ main.go
 │ │
-│ ├─ internal/
-│ │ ├─ config/
-│ │ │ └─ config.go
-│ │ │
-│ │ ├─ db/
-│ │ │ └─ db.go
-│ │ │
-│ │ ├─ handlers/
-│ │ │ └─ auth.go
-│ │ │
-│ │ ├─ models/
-│ │ │ └─ user.go
-│ │ │
-│ │ ├─ security/
-│ │ │ └─ jwt.go
-│ │ │
-│ │ └─ services/
-│ │ └─ auth.go
-│
-├─ .env
-├─ Dockerfile
-├─ go.mod
-└─ go.sum
+│ └─ internal/
+│   ├─ config/
+│   │ └─ config.go
+│   │
+│   ├─ db/
+│   │ └─ db.go
+│   │
+│   ├─ handlers/
+│   │ └─ auth.go
+│   │
+│   ├─ models/
+│   │ └─ user.go
+│   │
+│   ├─ security/
+│   │ └─ jwt.go
+│   │
+│   ├─ services/
+│   │  └─ auth.go
+│   │
+│   ├─ .env
+│   ├─ Dockerfile
+│   ├─ go.mod
+│   └─ go.sum
 ├─ registration/ # Модуль регистрации
 │ ├─ cmd/
 │ │ └─ app/
 │ │ └─ main.go
 │ │
-│ ├─ internal/
-│ │ ├─ config/
-│ │ │ └─ config.go
-│ │ │
-│ │ ├─ db/
-│ │ │ └─ db.go
-│ │ │
-│ │ ├─ handlers/
-│ │ │ └─ register.go
-│ │ │
-│ │ ├─ models/
-│ │ │ └─ user.go
-│ │ │
-│ │ ├─ repository/
-│ │ │ └─ balance.go
-│ │ │
-│ │ └─ services/
-│ │ └─ register.go
-│
-├─ .env
-├─ Dockerfile
-├─ go.mod
-└─ go.sum
+│ └─ internal/
+│   ├─ config/
+│   │ └─ config.go
+│   │
+│   ├─ db/
+│   │ └─ db.go
+│   │
+│   ├─ handlers/
+│   │ └─ register.go
+│   │
+│   ├─ models/
+│   │ └─ user.go
+│   │
+│   ├─ repository/
+│   │ └─ balance.go
+│   │
+│   ├─ services/
+│   │  └─ register.go
+│   │
+│   ├─ .env
+│   ├─ Dockerfile
+│   ├─ go.mod
+│   └─ go.sum
 ├─ transactions/ # Модуль пополнения и снятия
 │ ├─ cmd/
 │ │ └─ app/
 │ │ └─ main.go
 │ │
-│ ├─ internal/
-│ │ ├─ config/
-│ │ │ └─ config.go
-│ │ │
-│ │ ├─ db/
-│ │ │ └─ db.go
-│ │ │
-│ │ ├─ handlers/
-│ │ │ └─ handler.go
-│ │ │
-│ │ ├─ middleware/
-│ │ │ └─ auth.go
-│ │ │
-│ │ ├─ models/
-│ │ │ └─ account.go
-│ │ │
-│ │ ├─ repository/
-│ │ │ └─ balance.go
-│ │ │
-│ │ ├─ security/
-│ │ │ └─ jwt.go
-│ │ │
-│ │ └─ services/
-│ │ │ └─ balance.go
-│
-├─ .env
-├─ Dockerfile
-├─ go.mod
-└─ go.sum
+│ └─ internal/
+│   ├─ config/
+│   │ └─ config.go
+│   │
+│   ├─ db/
+│   │ └─ db.go
+│   │
+│   ├─ handlers/
+│   │ └─ handler.go
+│   │
+│   ├─ middleware/
+│   │ └─ auth.go
+│   │
+│   ├─ models/
+│   │ └─ account.go
+│   │
+│   ├─ repository/
+│   │ └─ balance.go
+│   │
+│   ├─ security/
+│   │ └─ jwt.go
+│   │
+│   ├─ services/
+│   │  └─ balance.go
+│   │
+│   ├─ .env
+│   ├─ Dockerfile
+│   ├─ go.mod
+│   └─ go.sum
 ├── .gitignore
 ├── db.sql
 ├── docker-compose.yml
