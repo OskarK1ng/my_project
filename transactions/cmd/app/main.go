@@ -25,6 +25,7 @@ func main() {
 
 	http.HandleFunc("/deposit", middleware.AuthMiddleware(cfg, handlers.DepositHandler))
 	http.HandleFunc("/withdraw", middleware.AuthMiddleware(cfg, handlers.WithdrawHandler))
+	http.HandleFunc("/getBalance", middleware.AuthMiddleware(cfg, handlers.GetBalanceHandler))
 
 	port := cfg.ServerPort
 	log.Printf("Starting server on localhost%s", port)

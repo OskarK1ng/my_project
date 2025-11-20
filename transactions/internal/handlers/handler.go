@@ -100,3 +100,54 @@ func WithdrawHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("Withdraw success for ID=%v, amount=%.2f", req.UserID, req.Balance)
 }
+
+func GetBalanceHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("[GetBalanceHandler] Requset received")
+
+	w.Header().Set("Content-Type", "application/json")
+
+	if r.Method != http.MethodPost {
+		http.Error(w, "invalid method", http.StatusBadRequest)
+		log.Printf("Invalid method: %s", r.Method)
+		return
+	}
+
+	// Читаем тело запроса
+	body, _ := io.ReadAll(r.Body)
+	r.Body.Close()
+	log.Printf("Request body: %s", string(body))
+
+	var req struct {
+		UserID string `json:"user_id"`
+	}
+
+	if err := json.Unmarshal(body, &req); err != nil {
+		http.Error(w, "invalid JSON", http.StatusBadRequest)
+		log.Printf("JSON decode error: %v", err)
+		return
+	}
+
+	if req.UserID == "" {
+		http.Error(w, "user_id is required", http.StatusBadRequest)
+		log.Println("user_id is empty")
+		return
+	}
+
+	// Вызов сервиса
+	balance, err := services.GetBalance(context.Background(), req.UserID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		log.Printf("Service error: %v", err)
+		return
+	}
+
+	// Ответ
+	resp := map[string]interface{}{
+		"user_id": req.UserID,
+		"balance": balance,
+	}
+
+	json.NewEncoder(w).Encode(resp)
+
+	log.Printf("Balance checked for ID=%v: %.2f", req.UserID, balance)
+}
